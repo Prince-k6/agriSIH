@@ -25,6 +25,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "python_simulation"))
 
 from sensor_simulator import SensorSimulator
+from satellite_simulator import SatelliteSimulator
+from stress_analysis import assess_crop_stress
 from threshold_logic import evaluate
 from ml_logic import evaluate_ml
 from data_logger import DataLogger
@@ -62,15 +64,20 @@ def main():
     print("=" * 60)
 
     sim = SensorSimulator(scenario=args.scenario)
+    sat_sim = SatelliteSimulator(scenario=args.scenario)
 
     data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
     log_path = os.path.join(data_dir, "sensor_log.csv")
     logger = DataLogger(log_path)
 
     pump_state = False
+    ndvi_history = []
 
     for cycle in range(1, args.cycles + 1):
         reading = sim.read_all()
+        sat_reading = sat_sim.read_all()
+        ndvi_history.append(sat_reading["ndvi"])
+        stress_result = assess_crop_stress(reading, sat_reading, ndvi_history)
         
         if args.mode == "ml":
             try:
@@ -92,6 +99,10 @@ def main():
         print(f"  Humidity      : {reading['humidity']} %")
         print(f"  Light         : {reading['light']}")
         print(f"  Water Level   : {reading['water_level']} %")
+        print(f"  Satellite NDVI: {sat_reading['ndvi']} ({sat_reading['crop_health']})")
+        print(f"  Spectral Bands: Red={sat_reading['band_4_red']}, NIR={sat_reading['band_8_nir']}")
+        print(f"  Crop Stress   : {stress_result['crop_stress']} — {stress_result['likely_cause']}")
+        print(f"  Evidence      : {stress_result['stress_evidence']}")
         print(f"  Pump Status   : {'ON' if pump_state else 'OFF'}")
 
         if alerts:
@@ -100,7 +111,7 @@ def main():
         else:
             print("  >> Status: Normal - no alerts")
 
-        logger.log(reading, pump_state, alerts)
+        logger.log(reading, pump_state, alerts, sat_reading, stress_result)
 
         if cycle < args.cycles:
             time.sleep(args.interval)
@@ -112,4 +123,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

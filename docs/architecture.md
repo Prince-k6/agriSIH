@@ -44,6 +44,23 @@
                            └──────────────────────┘
 ```
 
+## Phase 2 Satellite Layer
+
+```
+Sentinel-2-style Band 4 (Red) + Band 8 (NIR)
+                    ↓
+       NDVI = (NIR - Red) / (NIR + Red)
+                    ↓
+        vegetation-health signal
+                    ↓
+    dashboard + future sensor fusion
+```
+
+The demo currently generates controlled Red/NIR reflectance so that the NDVI
+calculation can be demonstrated reliably. The dashboard labels this honestly as
+simulated data. A future Sentinel-2 ingestion component will replace only this
+input source; downstream NDVI, logging, and dashboard fields stay the same.
+
 ## Data Flow
 
 ```

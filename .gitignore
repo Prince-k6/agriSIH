@@ -5,7 +5,8 @@ __pycache__/
 venv/
 
 # Data outputs (keep folder, ignore generated logs if desired)
-# data/sensor_log.csv
+data/*_backup.csv
+data/*_legacy.csv
 
 # Environment / secrets
 .env

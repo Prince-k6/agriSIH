@@ -1,9 +1,9 @@
 # IoT-Enabled Smart Agriculture Monitoring System
 
-This project is a smart irrigation prototype for monitoring agricultural
-conditions and deciding when a water pump should run. It supports a complete
-Python simulation, a Streamlit dashboard, machine-learning diagnostics, and
-an optional ESP32 implementation.
+This project is an explainable smart-agriculture prototype for SIH. It combines
+sensor-driven irrigation monitoring with **Phase 2 satellite-style vegetation
+monitoring**. It supports a complete Python simulation, a polished Streamlit
+dashboard, machine-learning diagnostics, and an optional ESP32 implementation.
 
 ## What the Project Does
 
@@ -14,6 +14,7 @@ The system generates or reads five environmental measurements:
 - Humidity
 - Light intensity
 - Water-tank level
+- Sentinel-2-style Band 4 (Red) and Band 8 (NIR) reflectance
 
 The decision engine uses the measurements to:
 
@@ -21,6 +22,7 @@ The decision engine uses the measurements to:
 - Detect conditions such as dry soil, high temperature, low humidity, low
 	light, and low water level
 - Record every reading, pump state, and alert in `data/sensor_log.csv`
+- Calculate NDVI and translate it into an understandable vegetation-health signal
 
 The project has two decision modes:
 
@@ -33,13 +35,14 @@ The project has two decision modes:
 ```text
 main.py                         Python simulation entry point
 requirements.txt                Python dependencies
-python_simulation/              Simulator, rules, logger, and ML scripts
-dashboard/dashboard_app.py     Streamlit monitoring dashboard
+python_simulation/              Sensor/satellite simulators, NDVI, rules, logger, ML
+dashboard/dashboard_app.py     Judge-ready Streamlit monitoring dashboard
 data/                           Sensor logs and training data
 outputs/                        Trained model and model metadata
 arduino_code/                   ESP32 and MQTT implementation
 circuit_diagram/                Wokwi circuit configuration
 docs/architecture.md            System architecture and data flow
+docs/phase-2-satellite.md       Sentinel-2 / Red-NIR / NDVI explanation
 ```
 
 ## Requirements
@@ -131,9 +134,31 @@ streamlit run dashboard/dashboard_app.py
 ```
 
 Open the local URL shown by Streamlit, usually `http://localhost:8501`.
-The dashboard displays the latest readings, sensor trends, pump history,
-alerts, raw log data, and ML model diagnostics. Use the sidebar to switch
-between rules-based and ML decision modes.
+The dashboard displays a farm overview, NDVI evidence, sensor trends,
+recommendations, explainable rules/ML comparison, and prototype data evidence.
+It clearly labels the Phase 2 spectral inputs as simulated until a live
+Sentinel-2 data connector is added.
+
+## Phase 2: Satellite / Multispectral Component
+
+Phase 2 is complete as a demonstrable, data-source-independent NDVI pipeline:
+
+```text
+Band 4 (Red) + Band 8 (NIR) -> NDVI -> Vegetation health -> Dashboard
+```
+
+The current simulator generates realistic-looking Red/NIR reflectance for
+normal, dry-soil, and hot-day scenarios. Dry conditions gradually lower NIR and
+raise Red, creating a declining NDVI trend. This gives a repeatable demo while
+keeping the implementation simple. See [Phase 2 satellite guide](docs/phase-2-satellite.md)
+for the formula, Sentinel-2 explanation, limitations, and next integration step.
+
+## Phase 3: Sensor + Satellite Fusion
+
+Phase 3 combines the NDVI trend with soil moisture, temperature, and humidity
+to identify an explainable **likely crop-stress pattern**. For example, dry
+soil plus a falling NDVI becomes “Likely water stress,” rather than a vague
+“crop unhealthy” label. See [Phase 3 fusion guide](docs/phase-3-sensor-satellite-fusion.md).
 
 ## Optional ESP32 Version
 
