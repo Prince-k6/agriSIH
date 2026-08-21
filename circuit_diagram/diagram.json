@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "author": "Smart Agriculture Project",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp32", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht22", "top": -80, "left": 150, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "soil_pot", "top": 80, "left": 150, "attrs": { "label": "Soil Moisture" } },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr1", "top": 160, "left": 150, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 0, "left": -150, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp32:4",  "dht22:SDA",  "green",  [] ],
+    [ "esp32:3V3", "dht22:VCC", "red",    [] ],
+    [ "esp32:GND", "dht22:GND", "black",  [] ],
+
+    [ "esp32:34", "soil_pot:SIG", "green", [] ],
+    [ "esp32:3V3", "soil_pot:VCC", "red",  [] ],
+    [ "esp32:GND", "soil_pot:GND", "black", [] ],
+
+    [ "esp32:35", "ldr1:AOUT", "green", [] ],
+    [ "esp32:3V3", "ldr1:VCC", "red",   [] ],
+    [ "esp32:GND", "ldr1:GND", "black", [] ],
+
+    [ "esp32:25", "relay1:IN",  "green", [] ],
+    [ "esp32:5V", "relay1:VCC", "red",   [] ],
+    [ "esp32:GND", "relay1:GND", "black", [] ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+    "model_type": "DecisionTreeClassifier",
+    "trained_at": "2026-08-21 05:20:36",
+    "features": [
+        "soil_moisture",
+        "temperature",
+        "humidity",
+        "light",
+        "water_level"
+    ],
+    "metrics": {
+        "decision_tree": {
+            "accuracy": 0.7958,
+            "precision": 0.775,
+            "recall": 0.9748,
+            "f1_score": 0.8635
+        },
+        "logistic_regression": {
+            "accuracy": 0.7708,
+            "precision": 0.7826,
+            "recall": 0.9057,
+            "f1_score": 0.8397
+        }
+    },
+    "feature_importances": {
+        "soil_moisture": 0.3053,
+        "temperature": 0.0222,
+        "humidity": 0.0311,
+        "light": 0.026,
+        "water_level": 0.6154
+    },
+    "tree_rules": "|--- water_level <= 77.47\n|   |--- temperature <= 27.93\n|   |   |--- soil_moisture <= 2602.25\n|   |   |   |--- class: 1\n|   |   |--- soil_moisture >  2602.25\n|   |   |   |--- class: 0\n|   |--- temperature >  27.93\n|   |   |--- humidity <= 52.68\n|   |   |   |--- class: 1\n|   |   |--- humidity >  52.68\n|   |   |   |--- class: 0\n|--- water_level >  77.47\n|   |--- soil_moisture <= 2272.95\n|   |   |--- class: 1\n|   |--- soil_moisture >  2272.95\n|   |   |--- water_level <= 80.01\n|   |   |   |--- humidity <= 53.12\n|   |   |   |   |--- class: 1\n|   |   |   |--- humidity >  53.12\n|   |   |   |   |--- class: 1\n|   |   |--- water_level >  80.01\n|   |   |   |--- light <= 1613.15\n|   |   |   |   |--- class: 0\n|   |   |   |--- light >  1613.15\n|   |   |   |   |--- class: 1\n"
+}
